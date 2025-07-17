@@ -19,12 +19,17 @@ public class ContentController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> getContent(Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).orElseThrow();
         return ResponseEntity.ok(Map.of(
                 "text", user.getUniqueText(),
                 "imageUrl", "/images/" + user.getImagePath()
         ));
+    }
+
+    @GetMapping("/test")
+    public String index() {
+        return "Hello World";
     }
 }

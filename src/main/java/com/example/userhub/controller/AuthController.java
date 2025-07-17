@@ -5,9 +5,11 @@ import com.example.userhub.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping
 public class AuthController {
     private final UserRepository userRepository;
@@ -18,22 +20,33 @@ public class AuthController {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
+    @GetMapping("/register")
+    public String showRegistrationForm() {
+        return "register";
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String username,
-                                      @RequestParam String password) {
+    public String registerUser(
+            @RequestParam String username,
+            @RequestParam String password,
+            Model model
+    ) {
         if (userRepository.findByUsername(username).isPresent()) {
-            return ResponseEntity.badRequest().body("User already exists");
+            model.addAttribute("error", "User already exists");
+            return "register";
         }
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setUniqueText("Hello " + username);
         userRepository.save(user);
-        return ResponseEntity.ok("Registered");
+
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
-    ResponseEntity<String> login() {
-        return ResponseEntity.ok("Please, login via form");
+    public String loginPage() {
+        return "login";
     }
 }

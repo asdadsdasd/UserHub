@@ -17,7 +17,6 @@ spring:
     init:
       mode: never
 
-
 logging:
   level:
     org.hibernate.SQL: DEBUG
