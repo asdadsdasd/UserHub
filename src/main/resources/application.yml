@@ -20,3 +20,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: DEBUG
+
+app:
+  upload:
+    dir: /app/images/avatars

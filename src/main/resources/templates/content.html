@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Content</title>
+</head>
+<body>
+<h1>Контент пользователя</h1>
+<p th:text="${text}">Уникальный текст</p>
+<img th:src="${imageUrl}" alt="User image" style="max-width: 400px;" />
+</body>
+</html>
