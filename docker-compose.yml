@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   postgres:
     image: postgres:15
@@ -39,6 +40,48 @@ services:
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
     restart: on-failure
+
+  nginx1:
+    image: openresty/openresty:alpine
+    container_name: nginx1
+    ports:
+      - "8081:80"
+    depends_on:
+      - app
+      - redis
+    volumes:
+      - ./nginx/config/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./nginx/lua:/etc/nginx/lua
+      - ./nginx/cache:/var/cache/nginx
+      - images_data:/app/images
+
+  nginx2:
+    image: openresty/openresty:alpine
+    container_name: nginx2
+    ports:
+      - "8082:80"
+    depends_on:
+      - app
+      - redis
+    volumes:
+      - ./nginx/config/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./nginx/lua:/etc/nginx/lua
+      - ./nginx/cache:/var/cache/nginx
+      - images_data:/app/images
+
+  nginx3:
+    image: openresty/openresty:alpine
+    container_name: nginx3
+    ports:
+      - "8083:80"
+    depends_on:
+      - app
+      - redis
+    volumes:
+      - ./nginx/config/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./nginx/lua:/etc/nginx/lua
+      - ./nginx/cache:/var/cache/nginx
+      - images_data:/app/images
 
 volumes:
   postgres_data:
