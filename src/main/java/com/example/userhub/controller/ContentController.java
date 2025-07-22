@@ -2,6 +2,7 @@ package com.example.userhub.controller;
 
 import com.example.userhub.entity.User;
 import com.example.userhub.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,16 +60,19 @@ public class ContentController {
     }
 
     @GetMapping("/content")
-    public String userContent(Model model, Principal principal) {
+    public String userContent(Model model, Principal principal, HttpServletRequest request) {
+        String sessionId = request.getRequestedSessionId();
+        System.out.println("SESSION ID = " + sessionId);
+        System.out.println("Principal = " + principal);
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
         User user = userRepository.findByUsername(principal.getName()).orElseThrow();
 
         model.addAttribute("text", user.getUniqueText());
         model.addAttribute("imageUrl", "/images/" + user.getImagePath());
         return "content";
-    }
-
-    @GetMapping("/test")
-    public String index() {
-        return "Hello World";
     }
 }
