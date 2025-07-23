@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/userhub
@@ -27,7 +28,6 @@ spring:
 #    timeout: 10m
 
 server:
-  forward-headers-strategy: framework
   servlet:
     session:
       cookie:
