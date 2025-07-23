@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Controller
 @RequestMapping
 public class AuthController {
@@ -47,6 +50,11 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
+        try {
+            System.out.println("Request catch at host: " + InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
         return "login";
     }
 }

@@ -20,36 +20,99 @@ services:
     ports:
       - "6379:6379"
 
-  app:
+  app1:
     build: .
-    container_name: spring_app
+    container_name: spring_app1
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       - postgres
       - redis
-    volumes:
-      - images_data:/app/images
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userhub
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "true"
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
+    volumes:
+      - images_data:/app/images
     restart: on-failure
+
+  app2:
+    build: .
+    container_name: spring_app2
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userhub
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    volumes:
+      - images_data:/app/images
+    restart: on-failure
+
+  app3:
+    build: .
+    container_name: spring_app3
+    ports:
+      - "8083:8080"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userhub
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    volumes:
+      - images_data:/app/images
 
   nginx1:
     image: nginx:1.25-alpine
     container_name: nginx1
     ports:
-      - "8081:80"
+      - "8091:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - images_data:/app/images
     depends_on:
-      - app
+      - app1
+      - app2
+      - app3
+      - redis
+
+  nginx2:
+    image: nginx:1.25-alpine
+    container_name: nginx2
+    ports:
+      - "8092:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - images_data:/app/images
+    depends_on:
+      - app1
+      - app2
+      - app3
+      - redis
+
+  nginx3:
+    image: nginx:1.25-alpine
+    container_name: nginx3
+    ports:
+      - "8093:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - images_data:/app/images
+    depends_on:
+      - app1
+      - app2
+      - app3
       - redis
 
 volumes:
